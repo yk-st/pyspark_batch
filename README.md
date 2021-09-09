@@ -1,2 +1,1 @@
-# pyspark_batch
-pysparkバッチ講座
+# Python + Spark = Pyspark 速習講座

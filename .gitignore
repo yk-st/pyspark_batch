@@ -1,3 +1,5 @@
 /metastore_db/
 /dataset/parquet/
 derby.log
+workspace.code-workspace
+.vscode/
