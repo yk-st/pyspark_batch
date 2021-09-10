@@ -77,6 +77,7 @@ def main():
 
     #以降にdataframeの処理を書いてももちろん問題なしです。
 
+    # 最後は停止処理をします
     spark.stop()
 
 if __name__ == '__main__':
