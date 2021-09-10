@@ -6,6 +6,9 @@ from pyspark import SparkConf
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
+from pyspark.sql.types import LongType, StructType, StructField, StringType
+from pyspark.sql.functions import col
+import json
 
 # parser
 class ParamProcessor(argparse.Action):
@@ -25,12 +28,12 @@ def main():
 
     parser = argparse.ArgumentParser(description='args')
     parser.add_argument('-a', '--appName', type=str, required=True, help='application name displaied at spark history server')
-    parser.add_argument('-p', '--path', type=str, required=True, help='application name displaied at spark history server')
-    parser.add_argument('-o', '--outpath', type=str, required=True, help='application name displaied at spark history server')
     parser.add_argument('-s', '--sql', type=str, required=False, help='specify sql path')
     parser.add_argument('-b', '--sqlBinding', required=False, help='sql placeholder ex. --sqlBinding dt=2019-01-01 --sqlBinding action=show',action=ParamProcessor)
     parser.add_argument('-t', '--tableName', type=str, required=False, help='specify sql path')
-    
+    parser.add_argument('-z', '--struct', type=str, required=False, default=None, help='specify schema path')
+    parser.add_argument('-f', '--file', type=str, required=False, default=None, help='specify schema path')
+
     args = parser.parse_args()
     parser=argparse.ArgumentParser()
 
@@ -50,19 +53,27 @@ def main():
     #SQLを読み込む
     # S3などのオブジェクトストレージでも大丈夫です
     df=spark.read.option("encoding", "utf-8").text(args.sql)
-    query=' '.join([str(x.asDict()['value']) for x in sql.collect()])
+    query=' \n '.join([str(x.asDict()['value']) for x in df.collect()])
 
     # プレースホルダーに値をセットする
     if args.sqlBinding is not None:
       query=query.format(**args.sqlBinding)
 
     print(query)
-    
+
+    # スキーマを読み込む
+    # S3などのオブジェクトストレージでも大丈夫です
+    schema_df=spark.read.option("encoding", "utf-8").text(args.struct)
+    struct=' '.join([str(x.asDict()['value']) for x in schema_df.collect()])
+    schema_json=json.loads(struct)
+
+    df=spark.read.option("multiLine", "true").option("encoding", "SJIS").csv(args.file, header=False, sep=',', inferSchema=False, schema=StructType.fromJson(schema_json))
+
     #　テンポラリテーブルを作成する
-    df.createOrReplaceTempView(args.targetTable)
+    df.createOrReplaceTempView(args.tableName)
 
     # SQLを発行する(今回はinsert 文)
-    #etl=spark.sql(query)
+    etl=spark.sql(query)
 
     #以降にdataframeの処理を書いてももちろん問題なしです。
 
