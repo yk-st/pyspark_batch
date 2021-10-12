@@ -26,6 +26,7 @@ class ParamProcessor(argparse.Action):
 
 def main():
 
+    # 引数の処理
     parser = argparse.ArgumentParser(description='args')
     parser.add_argument('-a', '--appName', type=str, required=True, help='application name displaied at spark history server')
     parser.add_argument('-s', '--sql', type=str, required=False, help='specify sql path')
@@ -37,7 +38,7 @@ def main():
     args = parser.parse_args()
     parser=argparse.ArgumentParser()
 
-    # generate spark session
+    # spark sessionの作成
     spark = SparkSession.builder \
     .appName("chapter3") \
     .config("hive.exec.dynamic.partition", "true") \
@@ -50,7 +51,7 @@ def main():
 
     print(args)
 
-    #SQLを読み込む
+    #SQLを読み込む(etl.sqlを読み込んでみます)
     # S3などのオブジェクトストレージでも大丈夫です
     df=spark.read.option("encoding", "utf-8").text(args.sql)
     query=' \n '.join([str(x.asDict()['value']) for x in df.collect()])
