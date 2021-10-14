@@ -1,5 +1,5 @@
 # Python + Spark = Pyspark 速習講座
-このリポジトリは、[Udemy](https://www.udemy.com/course/draft/4310920/?referralCode=E67BF8B61F65866794EB)で提供しているコースになります。
+このリポジトリは、[Udemy](https://www.udemy.com/course/python-spark-pyspark/?referralCode=E67BF8B61F65866794EB)で提供しているコースになります。
 
 詳しくは以下コースの参照をしてください。
 
