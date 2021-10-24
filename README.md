@@ -1,7 +1,8 @@
 # Python + Spark = Pyspark 速習講座
 このリポジトリは、[Udemy](https://www.udemy.com/course/python-spark-pyspark/?referralCode=E67BF8B61F65866794EB)で提供しているコースになります。
 
-詳しくは以下コースの参照をしてください。
+スライドはコチラにも公開しています。  
+https://speakerdeck.com/yuki_saito
 
 # 免責事項
 リポジトリ内のリソースの利用は自由ですが 
